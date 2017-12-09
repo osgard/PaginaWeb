@@ -1,0 +1,20 @@
+{% extends 'tienda/base.html' %}
+
+{% block content %}
+<article>
+  <header>
+
+    <span class="date">{{producto.nombreP}}</span>
+
+  </header>
+  <!-- <a href="#" class="image fit"><img src="{{producto.portada}}" /></a> -->
+  <p>{{producto.portada | safe}}</p>
+  <a href="#">Artista:{{producto.artista}}</a><br />
+  <p>percio:{{producto.precio}}<br />
+  fecha de liberacion: {{producto.infor}}</p>
+  <ul class="actions">
+    <li><a href="#" class="button">Agregar al cARRITO</a></li>
+  </ul>
+</article>
+
+{% endblock %}

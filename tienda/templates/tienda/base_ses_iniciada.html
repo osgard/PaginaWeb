@@ -1,0 +1,28 @@
+{% extends 'tienda/base.html' %}
+
+{% block tira %}
+<ul class="links">
+  <li class="active"><a href="index.html">Música</a></li>
+  <li><a href="{% url 'index' %}">Cerrar sesion</a></li>
+  <li><a href="#">{{cliente.nickname}}</a></li>
+</ul>
+{% endblock %}
+
+
+{% block content %}
+{% for producto in productos %}
+<article>
+  <header>
+    <span class="date">{{producto.nombreP}}</span>
+
+  </header>
+  <a href="{% url 'producto_detail' pk=producto.pk %}" class="image fit"><img src="{{producto.portada.url}}" alt="" /></a>
+  <a href="#">Artista:{{producto.artista}}</a><br />
+  <p>percio:{{producto.precio}}<br />
+  fecha de liberacion: {{producto.published_date}}</p>
+  <ul class="actions">
+    <li><a href="#" class="button">Agregar al cARRITO</a></li>
+  </ul>
+</article>
+{%endfor%}
+{% endblock %}
