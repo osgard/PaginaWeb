@@ -9,8 +9,9 @@ urlpatterns = [
 		url(r'^cliente/log/$', views.cliente_log, name='cliente_log'),
 		url(r'^logout/', views.cerrar, name='log_out'),
 		url(r'^producto/(?P<pk>[0-9]+)/$', views.producto_detail, name='producto_detail'),
-		url(r'^carrito/(?P<articulo>\d+)/(?P<cantidad>\d+)', views.actualizar_cookie),
-		url(r'^carrito/', views.carrito),
+		#url(r'^carrito/$', views.carrito_compra, name='carrito'),
+		#url(r'^carrito/(?P<articulo>\d+)/(?P<cantidad>\d+)', views.actualizar_cookie),
+		#url(r'^carrito/', views.carrito, name='carrito'),
 
     ]
     

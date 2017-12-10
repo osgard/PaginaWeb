@@ -11,6 +11,7 @@ from .forms import ClienteLog
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.forms import UserCreationForm
 
 # Create your views here.
 ########################################################################################################
@@ -19,19 +20,6 @@ from django.shortcuts import get_object_or_404
 def producto_list(request):
 		productos = Producto.objects.filter(published_date__year=2017).order_by('artista')
 		return render(request, 'tienda/index.html', {'productos':productos})
-#########################################################################################################
-#REGISTER
-#########################################################################################################
-def cliente_new(request):
-	if request.method == "POST":
-		form = ClienteForm(request.POST)
-		if form.is_valid():
-			cliente = form.save(commit=False)
-			cliente.save()
-			return redirect('index')
-	else:
-		form = ClienteForm()
-	return render(request, 'tienda/cliente_new.html', {'form': form})
 ###########################################################################################################
 #LOGIN
 ###########################################################################################################	
@@ -45,6 +33,15 @@ def cliente_log(request):
 			if user is not None:
 				if user.is_active:
 					login(request, user)
+					####################
+					#if(str(request.user))in request.COOKIES:
+					#	carrito = request.COOKIES[str(request.user)]
+					#else:
+					#	carrito =""
+					#	cookies = HttpResponseRedirect('/')
+					#	cookies.set_cookie(str(request.user),carrito)
+					#	return cookies
+					####################
 					#usuario = User.objects.get(username=usuarioo)
 					return redirect('index')
 				else:
@@ -58,6 +55,25 @@ def cliente_log(request):
 		formulario = ClienteLog()
 	#return formulario
 	return render(request, 'tienda/cliente_log.html', {'formulario': formulario})
+#########################################################################################################
+#REGISTER
+#########################################################################################################
+def cliente_new(request):
+	if request.method == "POST":
+		form = UserCreationForm(request.POST)
+		if form.is_valid():
+			form.save()
+			post_values = request.POST.copy()
+			post_values['password'] = post_values['password1']
+			request.POST = post_values
+			cliente_log(request)
+			#cliente = form.save(commit=False)
+			#cliente.save()
+			return redirect('index')
+	else:
+		form = UserCreationForm()
+	return render(request, 'tienda/cliente_new.html', {'form': form})
+
 #################################################################################################################
 #LOGOUT
 ################################################################################################################
@@ -78,32 +94,7 @@ def crear_cookie (request):
 ############################################################################
 #ACTULIZAR_COCKIES
 ############################################################################
-def actualizar_cookie (request, articulo, cantidad):
-    actualizado = False
-    usuario = request.user
-    response = HttpResponseRedirect(request.GET.get('next'))
-    print (request.GET.get('next'))
-    if request.COOKIES.has_key(str(usuario)):
-        carrito = request.COOKIES[str(usuario)]
-        print (carrito)
-        if carrito != "" :
-            lista = carrito.split(';')
-            carrito = ""
-            for element in lista:
-                if element != "":
-                    element = element.split('=')
-                    if element[0] == articulo:
-                        element[1] = int(cantidad)
-                        actualizado = True
-                    if element[1]!= 0:
-                        carrito += str(element[0]) + "=" + str(element[1]) + ";"
-        if actualizado == False :
-            carrito += articulo + '=' + cantidad + ';'
-        response.set_cookie(str(usuario), carrito)
-    else:
-        response.set_cookie(str(usuario), articulo + '=' + cantidad + ';')
-    print (request.COOKIES)
-    return response
+
 ################################################################################
 #DETAILS
 ################################################################################
@@ -113,30 +104,6 @@ def producto_detail(request, pk):
 ##################################################################################
 #CARRITO
 #################################################################################
-def carrito(request):
-    pagina = 'tienda/cart.html'
-    usuario = request.user
-    formulario = nuevo_usuario(request)
-    formulario2 = ingresar(request)
-    listado = []
-    if request.COOKIES.has_key(str(usuario)):
-        carrito = request.COOKIES[str(usuario)]
-        if carrito != "" :
-            productos = Producto.objects.all()
-            lista = carrito.split(';')
-            carrito = ""
-            for element in lista:
-                if element != "":
-                    element = element.split('=')
-                    for producto in productos:
-                        if (str(element[0]) == str(producto.nombreP)):
-                            total = int(element[1]) * int(Producto.precio)
-                            encontrado = {"nombre": producto.nombreP),"cantidad": element[1], "Precio": Producto.precio, "total": total, "Portada": producto.Portada, "Articulo": element[0]}
-                            listado.append(encontrado)
-    contexto = {'articulos' : listado, 'usuario':usuario, 'formulario':formulario, 'formulario2':formulario2}
-    return render(request, pagina, contexto)
-	
-
 
 		
 		

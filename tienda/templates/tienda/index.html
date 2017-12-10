@@ -3,13 +3,11 @@
 {% block tira %}
 <ul class="links">
   <li class="active"><!-- <a href="index.html">Precentacion</a>  -->
-    <div class="search_box pull-right">
-   <input id="buscador" type="text" placeholder="Buscar..."/>
-   <div id="quebusco"><div>
-  </div></li>
+</li>
   {% if user.is_authenticated %}
   <li><a href="{% url 'log_out' %}">Cerrar Sesion</a></li>
   <li><a href="#">Bienvenid@:{{user.username}}</a></li>
+
   {% else %}
   <li><a href="{% url 'cliente_log' %}">Iniciar Sesion</a></li>
   <li><a href="{% url 'cliente_new' %}">Rgistrarse</a></li>
@@ -28,10 +26,30 @@
   </header>
   <a href="{% url 'producto_detail' pk=producto.pk %}" class="image fit"><img src="{{producto.portada}}" alt="" /></a>
   <a href="#">Artista:{{producto.artista}}</a><br />
-  <p>percio:{{producto.precio}}<br />
+  <!--<p>percio:{{producto.precio}}<br />-->
+  <p>precio: $250</p>
   fecha de liberacion: {{producto.published_date}}</p>
   <ul class="actions">
-    <li><a href="/carrito{{tomo.Articulo}}/1?next={{request.get_full_path}}" class="button">Agregar al cARRITO</a></li>
+    <!--<li><a href=" class="button">Agregar al cARRITO</a></li>-->
+    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="B23K4HCBU3VFS">
+<input type="submit" class="btn btn-success btn-block" value="Comprar">
+<!--
+<input type="image" src="https://www.paypalobjects.com/es_XC/MX/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal, la forma más segura y rápida de pagar en línea.">
+<img alt="" border="0" src="https://www.paypalobjects.com/es_XC/i/scr/pixel.gif" width="1" height="1">
+-->
+</form>
+
+  <!--  <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+    <input type="hidden" name="cmd" value="_s-xclick">
+    <input type="hidden" name="hosted_button_id" value="B23K4HCBU3VFS">
+    <input type="image" src="https://www.paypalobjects.com/es_XC/MX/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal, la forma más segura y rápida de pagar en línea.">
+    <img alt="" border="0" src="https://www.paypalobjects.com/es_XC/i/scr/pixel.gif" width="1" height="1">
+    </form>
+
+-->
+
   </ul>
 </article>
 {%endfor%}
